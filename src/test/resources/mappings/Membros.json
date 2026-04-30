@@ -1,0 +1,26 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/mock/membros"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": [{
+      "id": 1,
+      "nome": "Gustavo",
+      "cargo": "Funcionario"
+    }, {
+      "id": 2,
+      "nome": "Fulano",
+      "cargo": "Funcionario"
+    },
+      {
+        "id": 3,
+        "nome": "Ciclano",
+        "cargo": "Gerente"
+      }]
+  }
+}
