@@ -2,9 +2,6 @@ package com.projeto.manager.services;
 
 import com.projeto.manager.infra.exceptions.CargoNotFoundException;
 import com.projeto.manager.infra.exceptions.MembroNaoGerenteException;
-import com.projeto.manager.infra.mappers.MembroMapper;
-import com.projeto.manager.infra.webclient.WebClientConfig;
-import com.projeto.manager.models.dtos.request.CriarMembroDto;
 import com.projeto.manager.models.dtos.response.MockMembroResponse;
 import com.projeto.manager.models.entity.Membro;
 import com.projeto.manager.infra.repositorys.MembroRepository;
@@ -20,7 +17,6 @@ import java.util.Optional;
 public class MembroService {
 
     private final MembroRepository repo;
-    private final MembroMapper mapper;
     private final WebClient webClient;
 
     public Membro buscarMembro(Long id){
