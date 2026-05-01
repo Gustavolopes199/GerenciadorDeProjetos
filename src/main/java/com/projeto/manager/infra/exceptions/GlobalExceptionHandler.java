@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import java.time.OffsetDateTime;
 
@@ -36,9 +37,24 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.UNPROCESSABLE_ENTITY, "MEMBRO_NAO_GERENTE", ex.getMessage(), request);
     }
 
+    @ExceptionHandler(MembroNaoFuncionarioException.class)
+    public ResponseEntity<ErroApi> handleMembroNaoFuncionarioException(MembroNaoFuncionarioException ex, HttpServletRequest request){
+        return build(HttpStatus.UNPROCESSABLE_ENTITY, "MEMBRO_NAO_GERENTE", ex.getMessage(), request);
+    }
+
     @ExceptionHandler(CargoNotFoundException.class)
     public ResponseEntity<ErroApi> handleCargoNotFounException(CargoNotFoundException ex, HttpServletRequest request){
-        return build(HttpStatus.BAD_REQUEST, "CARGAO_NAO_ENCONTRADO", ex.getMessage(), request);
+        return build(HttpStatus.BAD_REQUEST, "CARGO_NAO_ENCONTRADO", ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(QuantidadePorFuncionarioException.class)
+    public ResponseEntity<ErroApi> handleQuantiadeExcedida(QuantidadePorFuncionarioException ex, HttpServletRequest request){
+        return build(HttpStatus.UNPROCESSABLE_ENTITY, "CARGAO_NAO_ENCONTRADO", ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErroApi> handleEntidadeNaoEncontrada(EntityNotFoundException ex, HttpServletRequest request){
+        return build(HttpStatus.NOT_FOUND, "NOT_FOUND", ex.getMessage(), request);
     }
 
 

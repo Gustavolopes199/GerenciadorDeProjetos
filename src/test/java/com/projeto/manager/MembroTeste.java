@@ -2,9 +2,12 @@ package com.projeto.manager;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.projeto.manager.models.dtos.projeto.CadastroProjeto;
+import com.projeto.manager.infra.exceptions.CargoNotFoundException;
+import com.projeto.manager.infra.exceptions.MembroNotFoundException;
 import com.projeto.manager.models.dtos.response.MockMembroResponse;
-import lombok.extern.slf4j.Slf4j;
+import com.projeto.manager.models.entity.Membro;
+import com.projeto.manager.services.MembroService;
+import lombok.RequiredArgsConstructor;
 import okhttp3.mockwebserver.Dispatcher;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -16,34 +19,30 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.time.LocalDate;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.Assert.assertThrows;
 
-@Slf4j
+
 @SpringBootTest(classes = ManagerApplication.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class ProjetoTeste {
+public class MembroTeste {
 
-    @Autowired
-    private  MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
 
     private static MockWebServer mockApi;
 
+    @Autowired
+    private MembroService membroService;
+
     @BeforeAll
     static void ligarMockServer() throws IOException{
-
         mockApi = new MockWebServer();
         mockApi.start();
     }
@@ -58,30 +57,28 @@ public class ProjetoTeste {
         registry.add("baseUrl.teste", () -> mockApi.url("/").toString());
     }
 
-
     @Test
-    public void createProjetoSucesso() throws Exception{
+    public void buscarMembroSucesso(){
         disponibilizarMembro();
 
-        CadastroProjeto dto = new CadastroProjeto();
+        Membro membro = membroService.buscarMembro(1L);
 
-        dto.setNome("Projeto teste1");
-        dto.setDataInicio(LocalDate.now().minusMonths(3));
-        dto.setPrevisaoTermino(LocalDate.now().plusMonths(3));
-        dto.setOrcamentoTotal(BigDecimal.valueOf(500001));
-        dto.setIdGerente(Long.valueOf(1L));
+        assertThat(membro).isNotNull();
 
-        String response = mockMvc.perform(post("/projeto")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isCreated())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+    }
 
-        log.info("Response: {}", response);
+    @Test
+    public void buscarMembroNotFound(){
+        disponibilizarMembro();
 
+        assertThrows(MembroNotFoundException.class, () -> membroService.buscarMembro(999L));
+    }
 
+    @Test
+    public void BuscarMembroCargoErrado(){
+        disponibilizarMembro();
+
+        assertThrows(CargoNotFoundException.class, () -> membroService.buscarMembro(4L));
     }
 
 
@@ -127,6 +124,21 @@ public class ProjetoTeste {
                     MockMembroResponse response = new MockMembroResponse();
                     response.setId(3L);
                     response.setCargo("Funcionario");
+                    response.setNome("Beltrano");
+
+                    try {
+                        return new MockResponse()
+                                .setResponseCode(200)
+                                .addHeader("Content-Type", "application/json")
+                                .setBody(objectMapper.writeValueAsString(response));
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                if (recordedRequest.getPath().equals("/membro/4")){
+                    MockMembroResponse response = new MockMembroResponse();
+                    response.setId(4L);
+                    response.setCargo("Func");
                     response.setNome("Beltrano");
 
                     try {

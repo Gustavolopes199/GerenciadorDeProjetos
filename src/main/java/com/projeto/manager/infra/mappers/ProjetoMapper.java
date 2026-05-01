@@ -16,6 +16,7 @@ public class ProjetoMapper {
         entity.setDataInicio(data.getDataInicio());
         entity.setDataTermino(data.getDataTermino());
         entity.setPrevisaoTermino(data.getPrevisaoTermino());
+        entity.setOrcamentoTotal(data.getOrcamentoTotal());
 
         return entity;
     }
@@ -25,6 +26,9 @@ public class ProjetoMapper {
 
         dto.setId(entity.getId());
         dto.setNome(entity.getNome());
+        dto.setOrcamentoTotal(entity.getOrcamentoTotal());
+        dto.setDescricao(entity.getDescricao());
+        dto.setGerente(entity.getGerente().getNome());
 
         return dto;
     }
