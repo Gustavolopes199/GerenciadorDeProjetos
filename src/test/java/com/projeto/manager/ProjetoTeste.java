@@ -66,12 +66,12 @@ public class ProjetoTeste {
         CadastroProjeto dto = new CadastroProjeto();
 
         dto.setNome("Projeto teste1");
-        dto.setDataInicio(LocalDate.now().minusMonths(3));
-        dto.setPrevisaoTermino(LocalDate.now().plusMonths(3));
-        dto.setOrcamentoTotal(BigDecimal.valueOf(500001));
+        dto.setDataInicio(LocalDate.now().minusMonths(1));
+        dto.setPrevisaoTermino(LocalDate.now().plusMonths(1));
+        dto.setOrcamentoTotal(BigDecimal.valueOf(101000));
         dto.setIdGerente(Long.valueOf(1L));
 
-        String response = mockMvc.perform(post("/projeto")
+        String response = mockMvc.perform(post("/projetos")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isCreated())

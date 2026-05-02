@@ -22,6 +22,7 @@
     * Membro não pode ter mais de 3 projetos cujo status seja diferente de encerrado ou cancelado;
 # EndPoints
   - Utilizar Spring Security -> Liberar cors para front-end/Req externa
+  - Doc Security: https://medium.com/@ansgar.nell/spring-boot-security-step-by-step-21ea836499f8
   * ## Projetos 
     * Busca Paginada + Filtros -> Documentar com swagger 
       * Ref: Projeto do integrador com aprovação de produto, query que buscava 90 mil produtos com filtros
