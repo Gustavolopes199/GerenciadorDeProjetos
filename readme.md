@@ -38,3 +38,25 @@
       * Testes filtro relatorio
       * Validar melhor informações de update
       * Log de mudanças de projeto
+      * Melhorar Swagger
+  
+
+    # Login: User
+    # Senha: senhaDificil
+    # LinkSwagger: http://localhost:8080/swagger-ui/index.html
+
+    # spring.jpa.database=POSTGRESQL
+    # spring.datasource.platform=postgres
+    # spring.jpa.hibernate.ddl-auto=update
+    # spring.database.driverClassName=org.postgresql.Driver
+    # spring.datasource.url=jdbc:postgresql://localhost:5432/projectManager
+    # spring.datasource.username=postgres
+    # spring.datasource.password=123456
+
+    # server.port=8080
+
+    # baseUrl.teste=http://localhost
+
+    
+    
+
