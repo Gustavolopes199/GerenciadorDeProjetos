@@ -2,7 +2,8 @@ package com.projeto.manager;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.projeto.manager.models.dtos.projeto.CadastroProjeto;
+import com.projeto.manager.models.dtos.request.CadastroProjeto;
+import com.projeto.manager.models.dtos.request.ReqAlocarMembroProjeto;
 import com.projeto.manager.models.dtos.response.MockMembroResponse;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.mockwebserver.Dispatcher;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -81,6 +83,138 @@ public class ProjetoTeste {
 
         log.info("Response: {}", response);
 
+    }
+
+    @Test
+    public void createProjetoFalhaData() throws Exception {
+        disponibilizarMembro();
+
+        CadastroProjeto dto = new CadastroProjeto();
+        dto.setNome("Projeto teste1");
+        dto.setDataInicio(LocalDate.now().plusYears(1));
+        dto.setPrevisaoTermino(LocalDate.now().plusMonths(1));
+        dto.setOrcamentoTotal(BigDecimal.valueOf(101000));
+        dto.setIdGerente(Long.valueOf(1L));
+
+        String response = mockMvc.perform(post("/projetos")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsBytes(dto)))
+                .andExpect(status().is4xxClientError())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+
+        log.info("Resposta: {}", response);
+    }
+
+    @Test
+    public void createProjetoFalhaGerente() throws Exception {
+        disponibilizarMembro();
+
+        CadastroProjeto dto = new CadastroProjeto();
+        dto.setNome("Projeto teste1");
+        dto.setDataInicio(LocalDate.now().plusYears(1));
+        dto.setPrevisaoTermino(LocalDate.now().plusMonths(1));
+        dto.setOrcamentoTotal(BigDecimal.valueOf(101000));
+        dto.setIdGerente(Long.valueOf(6L));
+
+        String response = mockMvc.perform(post("/projetos")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsBytes(dto)))
+                .andExpect(status().is4xxClientError())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+
+        log.info("Resposta: {}", response);
+    }
+
+    @Test
+    public void buscarProjetosTest() throws Exception {
+        String response = mockMvc.perform(get("/projetos"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        log.info(response);
+    }
+
+    @Test
+    public void buscarProjetosTestStatus() throws Exception {
+        String response = mockMvc.perform(get("/projetos?statusProjeto=EM_ANDAMENTO")
+                        )
+                .andExpect(status().isNotFound())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        log.info(response);
+    }
+
+    @Test
+    public void buscarProjetoGerente() throws Exception {
+        String response = mockMvc.perform(get("/projetos?idGerenteList=1")
+                )
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        log.info(response);
+    }
+
+    @Test
+    public void alocarMembroProjetoSucesso() throws Exception{
+        disponibilizarMembro();
+        ReqAlocarMembroProjeto body = new ReqAlocarMembroProjeto();
+        body.setIdProjeto(2L);
+        body.setIdMembro(2L);
+
+        String response = mockMvc.perform(post("/projetos/membro")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(body)))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        log.info("Response: {}", response);
+
+
+    }
+
+    @Test
+    public void alocamMebroFalha() throws Exception{
+
+        disponibilizarMembro();
+        ReqAlocarMembroProjeto body = new ReqAlocarMembroProjeto();
+        body.setIdProjeto(2L);
+        body.setIdMembro(10L);
+
+        String response = mockMvc.perform(post("/projetos/membro")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(body)))
+                .andExpect(status().is4xxClientError())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        log.info("Response: {}", response);
+    }
+
+    @Test
+    public void buscarRelatorio() throws Exception{
+
+        String response = mockMvc.perform(get("/projetos/relatorio"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        log.info("Response: {}", response);
 
     }
 
@@ -137,6 +271,11 @@ public class ProjetoTeste {
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                     }
+                }
+                if (recordedRequest.getPath().equals("/membro/10")){
+                        return new MockResponse()
+                                .setResponseCode(404)
+                                .addHeader("Content-Type", "application/json");
                 }
 
                 return new MockResponse()

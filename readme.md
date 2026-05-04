@@ -21,13 +21,20 @@
     * Minimo 1 Máximo 10
     * Membro não pode ter mais de 3 projetos cujo status seja diferente de encerrado ou cancelado;
 # EndPoints
-  - Utilizar Spring Security -> Liberar cors para front-end/Req externa
+  - Utilizar Spring Security -> Liberar cors para front-end/Req externa 👌
   - Doc Security: https://medium.com/@ansgar.nell/spring-boot-security-step-by-step-21ea836499f8
-  * ## Projetos 
+  * ## Projetos  👌
+    * Adcionar regra para que o projeto so possa ser encerrado caso tenha dataTermino para não quebrar o relatorio 
     * Busca Paginada + Filtros -> Documentar com swagger 
       * Ref: Projeto do integrador com aprovação de produto, query que buscava 90 mil produtos com filtros
-  * ## Relatorios
+  * ## Relatorios 👌
     * Quantidade de Projetos por status
     * Total Orçado Por Status
-    * Media de dureação dos projetos encerrados
-    * Total de Membros unicos alocados
+    * Media de duração dos projetos encerrados
+    * Total de Membros unicos alocados (DÚVIDA) quantidade de membros? 
+
+    * Faltou: 
+      * Testes para update de projeto
+      * Testes filtro relatorio
+      * Validar melhor informações de update
+      * Log de mudanças de projeto

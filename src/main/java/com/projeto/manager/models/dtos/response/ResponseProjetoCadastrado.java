@@ -1,4 +1,4 @@
-package com.projeto.manager.models.dtos.projeto;
+package com.projeto.manager.models.dtos.response;
 
 import com.projeto.manager.models.enums.RiscoProjeto;
 import lombok.AllArgsConstructor;

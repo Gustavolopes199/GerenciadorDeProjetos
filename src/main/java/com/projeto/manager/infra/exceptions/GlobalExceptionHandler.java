@@ -57,5 +57,10 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.NOT_FOUND, "NOT_FOUND", ex.getMessage(), request);
     }
 
+    @ExceptionHandler(ErroValidarDadosException.class)
+    public ResponseEntity<ErroApi> handleErroAoValidarDados(ErroValidarDadosException ex, HttpServletRequest request){
+        return build(HttpStatus.UNPROCESSABLE_ENTITY, "ERRO_VALIDACAO", ex.getMessage(), request);
+    }
+
 
 }

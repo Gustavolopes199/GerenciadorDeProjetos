@@ -58,19 +58,19 @@ public class ProjetoSpecification  {
                 ));
             }
 
-            if (!statusProjeto.isEmpty()){
+            if (statusProjeto != null){
                 predicates.add(
                         root.get("statusProjeto").in(statusProjeto)
                 );
             }
 
-            if (!idGerenteList.isEmpty()){
+            if (idGerenteList != null){
                 predicates.add(
                         root.get("gerente").in(idGerenteList)
                 );
             }
 
-            if (!idFuncionarioList.isEmpty()){
+            if (idFuncionarioList != null){
                 Join<Object, Object> funcionarios = root.join("funcionarios", JoinType.INNER);
                 predicates.add(funcionarios.get("id").in(idFuncionarioList));
             }

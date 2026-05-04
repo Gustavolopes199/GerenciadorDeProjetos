@@ -1,13 +1,12 @@
-package com.projeto.manager.models.dtos.projeto;
+package com.projeto.manager.models.dtos.request;
 
+import com.projeto.manager.models.enums.StatusProjeto;
 import lombok.Data;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
-public class CadastroProjeto {
+public class RequestUpdateProjeto {
 
     private String nome;
 
@@ -21,8 +20,6 @@ public class CadastroProjeto {
 
     private String descricao;
 
-    private Long idGerente;
-
-    private List<Long> funcionarios;
+    private StatusProjeto statusProjeto;
 
 }
